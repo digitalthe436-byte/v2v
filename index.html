@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LeanTrack Pro | Smart Weight Loss & 30-Day Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: #f8fafc; color: #1e293b; transition: all 0.2s; }
+    body.dark { background: #0f172a; color: #e2e8f0; }
+    body.dark .card, body.dark .widget, body.dark .navbar, body.dark footer, body.dark .modal-content, body.dark .exercise-item { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    body.dark .btn-outline { border-color: #64748b; color: #cbd5e1; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    .navbar { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eef2f6; backdrop-filter: blur(4px); }
+    body.dark .navbar { background: #1e293b; border-bottom-color: #334155; }
+    .nav-flex { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; gap: 1rem; }
+    .logo { font-weight: 800; font-size: 1.6rem; background: linear-gradient(135deg, #2b9348, #0f7b3a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+    .nav-links a { text-decoration: none; font-weight: 500; color: #334155; cursor: pointer; }
+    body.dark .nav-links a { color: #cbd5e1; }
+    .btn-primary { background: #2b9348; color: white; border: none; padding: 0.6rem 1.3rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-outline { background: transparent; border: 1.5px solid #2b9348; color: #2b9348; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+    .btn-toggle, .btn-login { background: none; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer; }
+    .card { background: white; border-radius: 28px; padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.02); border: 1px solid #f0f2f5; margin-bottom: 1.5rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
+    .widget { background: white; border-radius: 24px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f0f2f5; }
+    body.dark .widget { background: #1e293b; }
+    .stat-number { font-size: 2rem; font-weight: 800; color: #2b9348; }
+    .progress { background: #e2e8f0; border-radius: 20px; height: 10px; overflow: hidden; margin: 0.8rem 0; }
+    .progress-fill { background: #2b9348; width: 0%; height: 100%; border-radius: 20px; transition: width 0.3s; }
+    .badge { background: #e9f7ef; color: #1e7b3c; border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; font-weight: 600; }
+    .exercise-item { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 0.5rem; }
+    .exercise-name { font-weight: 600; flex: 2; }
+    .completed-exercise { text-decoration: line-through; opacity: 0.6; }
+    .meal-input-area { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .meal-input-area input { padding: 0.8rem; border-radius: 60px; border: 1px solid #e2e8f0; flex: 1; background: #f9fafb; }
+    .food-log { max-height: 300px; overflow-y: auto; }
+    .food-item { display: flex; justify-content: space-between; padding: 0.6rem; border-bottom: 1px solid #eef2f6; }
+    .macro-card { background: #f1f5f9; border-radius: 20px; padding: 0.8rem; text-align: center; flex: 1; }
+    body.dark .macro-card { background: #334155; }
+    h2 { font-size: 1.8rem; margin: 1rem 0 0.5rem; font-weight: 700; }
+    .notification-toast { position: fixed; bottom: 20px; right: 20px; background: #2b9348; color: white; padding: 12px 20px; border-radius: 60px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: fadeInUp 0.3s ease; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(3px); }
+    .modal-content { background: white; max-width: 450px; width: 90%; border-radius: 32px; padding: 1.8rem; }
+    .day-badge { display: inline-block; width: 45px; text-align: center; margin: 4px; padding: 8px 0; border-radius: 60px; background: #eef2ff; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .day-completed { background: #2b9348; color: white; }
+    .day-locked { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; opacity: 0.6; }
+    .day-current { border: 2px solid #f59e0b; box-shadow: 0 0 0 2px #fef3c7; }
+    .input-group { margin-bottom: 1rem; }
+    .input-group label { display: block; font-weight: 500; margin-bottom: 0.3rem; }
+    .input-group input { width: 100%; padding: 0.7rem; border-radius: 60px; border: 1px solid #cbd5e1; }
+    hr { margin: 1rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-flex">
+    <div class="logo"><i class="fas fa-leaf"></i> LeanTrack AI</div>
+    <div class="nav-links">
+      <a data-page="landing">Home</a>
+      <a data-page="dashboard">Dashboard</a>
+      <a data-page="challenge">30-Day</a>
+      <a data-page="workout">Workouts</a>
+      <a data-page="nutrition">Nutrition AI</a>
+      <a data-page="water">Water</a>
+      <button class="btn-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button>
+      <button class="btn-login" id="showProfileBtn"><i class="fas fa-user"></i> Profile</button>
+    </div>
+  </div>
+</nav>
+
+<main id="appRoot">
+  <div id="landingPage">
+    <div class="container" style="padding: 2rem 0;">
+      <div style="text-align: center; padding: 2rem 0;">
+        <h1 style="font-size: 3rem; font-weight: 800;">Transform Your Body in <span style="color:#2b9348;">30 Days</span></h1>
+        <p style="font-size: 1.2rem; margin: 1rem 0;">Personalized weight loss journey · AI calorie tracker · Smart habits</p>
+        <button class="btn-primary" id="startChallengeBtn">🔥 Start 30-Day Challenge</button>
+        <button class="btn-outline" id="trackProgressBtn">📊 Track Progress</button>
+      </div>
+      <div class="grid-2">
+        <div class="card"><i class="fas fa-dumbbell" style="font-size: 2rem; color:#2b9348;"></i><h3>15+ Weight Loss Exercises</h3><p>Daily workout checklist & calorie burn</p></div>
+        <div class="card"><i class="fas fa-robot" style="font-size: 2rem; color:#3b82f6;"></i><h3>AI Calorie Estimator</h3><p>Describe your meal, we calculate macros</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD - KEPT AS BEFORE with Charts + weight/goal tracking -->
+  <div id="dashboardPage" style="display:none;">
+    <div class="container">
+      <h2>📊 Your Wellness Dashboard</h2>
+      <div class="dashboard-grid">
+        <div class="widget"><i class="fas fa-weight-scale"></i> Current Weight <div class="stat-number" id="dashCurrentWeight">-- kg</div>Goal: <span id="dashGoalWeight">--</span> kg</div>
+        <div class="widget"><i class="fas fa-bullseye"></i> Goal Progress <div class="stat-number" id="weightLeft">--</div>kg to goal</div>
+        <div class="widget"><i class="fas fa-fire"></i> Calories Burned <div class="stat-number" id="totalBurnCalsDash">0</div>Today</div>
+        <div class="widget"><i class="fas fa-calendar-week"></i> Streak <div class="stat-number" id="streakDaysDash">0</div>days 🔥</div>
+      </div>
+      <div class="progress"><div class="progress-fill" id="dailyProgressFillDash" style="width:0%"></div><span id="dailyPercentTextDash">0% daily progress</span></div>
+      <div class="grid-2">
+        <div class="card"><canvas id="weightChart" width="300" height="180"></canvas><p>Weight trend (last 7 days)</p></div>
+        <div class="card"><canvas id="waterChart" width="300" height="180"></canvas><p>Hydration (L)</p></div>
+        <div class="card"><canvas id="caloriesChart" width="300" height="180"></canvas><p>Calorie intake vs goal</p></div>
+      </div>
+      <div class="card"><h3>Weekly Workout Completion</h3><canvas id="workoutCompletionChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 30-DAY CHALLENGE: Only 1 day can be marked per actual day -->
+  <div id="challengePage" style="display:none;">
+    <div class="container">
+      <h2>🔥 30-Day Transformation Challenge</h2>
+      <div class="card">
+        <div class="progress"><div class="progress-fill" id="challengeFill" style="width:0%"></div></div>
+        <p id="challengeInfo" style="margin: 0.5rem 0;">You can only mark 1 day as completed per calendar day. Stay consistent!</p>
+        <div id="challengeDaysGrid" style="display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0;"></div>
+        <button id="completeTodayBtn" class="btn-primary"><i class="fas fa-check-circle"></i> Mark Today's Day as Done</button>
+        <p id="nextDayMsg" style="margin-top: 1rem; font-size: 0.8rem; color: #f59e0b;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKOUT PAGE (15 exercises with checkboxes) -->
+  <div id="workoutPage" style="display:none;"><div class="container"><h2><i class="fas fa-heartbeat"></i> 15 Weight Loss Workouts</h2><div class="card"><div id="workoutExerciseList"></div><div class="progress"><div class="progress-fill" id="workoutProgressFill" style="width:0%"></div></div><p id="workoutCompletedCount">0/15 exercises completed</p><button id="resetWorkoutsBtn" class="btn-outline">Reset Today</button></div></div></div>
+
+  <!-- NUTRITION AI PAGE -->
+  <div id="nutritionPage" style="display:none;"><div class="container"><h2><i class="fas fa-brain"></i> AI Calorie Tracker</h2><div class="card"><div class="meal-input-area"><input type="text" id="mealDescription" placeholder="e.g., grilled chicken salad, rice and beans"><button id="analyzeMealBtn" class="btn-primary">AI Estimate</button></div><div id="aiSuggestion" style="background:#eef2ff; padding:0.8rem; border-radius:20px; margin-bottom:1rem;"></div><h3>Today's Food Log</h3><div id="foodLogList" class="food-log"></div><div class="grid-2" style="margin-top:1rem;"><div class="macro-card">🔥 Calories: <span id="totalCaloriesSpan">0</span></div><div class="macro-card">🥩 Protein: <span id="totalProteinSpan">0</span>g</div><div class="macro-card">🍚 Carbs: <span id="totalCarbsSpan">0</span>g</div><div class="macro-card">🧈 Fats: <span id="totalFatsSpan">0</span>g</div></div><button id="clearMealsBtn" class="btn-outline">Clear Log</button></div></div></div>
+
+  <!-- WATER TRACKER -->
+  <div id="waterPage" style="display:none;"><div class="container"><h2>💧 Hydration Tracker</h2><div class="card"><div id="waterGlassesContainer"></div><button id="resetWaterBtn" class="btn-outline">Reset</button></div></div></div>
+</main>
+
+<footer class="footer"><div class="container" style="text-align:center; padding: 1.5rem;">© LeanTrack — Science-backed 30-day transformation</div></footer>
+
+<!-- SIGNUP / PROFILE MODAL: asks weight and goal -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-user-circle"></i> Your Weight Loss Profile</h3>
+    <p>Set your goals for accurate tracking</p>
+    <div class="input-group"><label>Current Weight (kg)</label><input type="number" id="userWeight" step="0.1" placeholder="e.g., 75"></div>
+    <div class="input-group"><label>Target Weight (kg)</label><input type="number" id="userGoalWeight" step="0.1" placeholder="e.g., 65"></div>
+    <button id="saveProfileBtn" class="btn-primary" style="width:100%;">Save & Start Journey</button>
+    <hr>
+    <button id="closeProfileBtn" class="btn-outline" style="width:100%; margin-top:0.5rem;">Close</button>
+  </div>
+</div>
+
+<script>
+  // ---------- USER PROFILE STATE ----------
+  let userProfile = JSON.parse(localStorage.getItem("userProfile")) || { currentWeight: 72, goalWeight: 65 };
+  // Challenge state: completed days array (max 30, only one per real day allowed)
+  let completedDays = JSON.parse(localStorage.getItem("completedDays")) || []; // array of day numbers (1-indexed)
+  let lastCompletionDate = localStorage.getItem("lastCompletionDate") || ""; // track last date when user marked a day
+  // Workout, food, water state
+  const WORKOUTS = [
+    { name: "🔥 Jumping Jacks", calories: 100, done: false }, { name: "🏃 High Knees", calories: 110, done: false },
+    { name: "💪 Burpees", calories: 150, done: false }, { name: "🧗 Mountain Climbers", calories: 120, done: false },
+    { name: "⚡ Squat Jumps", calories: 130, done: false }, { name: "🚴 Bicycle Crunches", calories: 90, done: false },
+    { name: "🏋️ Push-ups", calories: 80, done: false }, { name: "🏋️‍♀️ Lunges", calories: 85, done: false },
+    { name: "🕺 Jump Rope", calories: 140, done: false }, { name: "🧘 Plank (1 min)", calories: 70, done: false },
+    { name: "🏃‍♀️ Running in place", calories: 100, done: false }, { name: "🤸 Side Shuffles", calories: 95, done: false },
+    { name: "💥 Box Jumps", calories: 120, done: false }, { name: "🧗 Cross-body Climbers", calories: 105, done: false },
+    { name: "🌟 Russian Twists", calories: 85, done: false }
+  ];
+  let workoutProgress = JSON.parse(localStorage.getItem("workoutProgress")) || WORKOUTS.map(w => ({ name: w.name, calories: w.calories, done: false }));
+  let foodLog = JSON.parse(localStorage.getItem("foodLog")) || [];
+  let waterGlasses = parseInt(localStorage.getItem("waterGlasses") || "2");
+  // weight history for chart
+  let weightHistory = JSON.parse(localStorage.getItem("weightHistory")) || [userProfile.currentWeight, userProfile.currentWeight-0.3, userProfile.currentWeight-0.7, userProfile.currentWeight-1.0, userProfile.currentWeight-1.3, userProfile.currentWeight-1.6, userProfile.currentWeight-1.9];
+  let waterData = [2.2,2.5,1.8,2.9,3.0,2.4,2.8];
+  let calorieData = [1800,1750,1700,1650,1600,1550,1500];
+  let workoutCompletionData = [75,80,70,85,90,78,88];
+
+  function showToast(msg) { let t = document.createElement('div'); t.className = 'notification-toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2500); }
+
+  // Update dashboard & charts
+  function updateAllCharts() {
+    if(window.weightChartObj) window.weightChartObj.destroy();
+    if(window.waterChartObj) window.waterChartObj.destroy();
+    if(window.caloriesChartObj) window.caloriesChartObj.destroy();
+    if(window.workoutChartObj) window.workoutChartObj.destroy();
+    const ctxW = document.getElementById('weightChart')?.getContext('2d');
+    if(ctxW) window.weightChartObj = new Chart(ctxW, { type:'line', data:{ labels:['Day1','2','3','4','5','6','Today'], datasets:[{ label:'Weight (kg)', data:weightHistory, borderColor:'#2b9348', tension:0.2 }] } });
+    const ctxWat = document.getElementById('waterChart')?.getContext('2d');
+    if(ctxWat) window.waterChartObj = new Chart(ctxWat, { type:'bar', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'Water (L)', data:waterData, backgroundColor:'#3b82f6' }] } });
+    const ctxCal = document.getElementById('caloriesChart')?.getContext('2d');
+    if(ctxCal) window.caloriesChartObj = new Chart(ctxCal, { type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'Calories', data:calorieData, borderColor:'#f59e0b' }] } });
+    const ctxWork = document.getElementById('workoutCompletionChart')?.getContext('2d');
+    if(ctxWork) window.workoutChartObj = new Chart(ctxWork, { type:'bar', data:{ labels:['HIIT','Yoga','Strength','Cardio','Walk','Stretch'], datasets:[{ label:'Completion %', data:workoutCompletionData, backgroundColor:'#10b981' }] } });
+  }
+
+  function updateDashboardNumbers() {
+    let completedEx = workoutProgress.filter(e=>e.done).length;
+    let burned = workoutProgress.filter(e=>e.done).reduce((s,e)=>s+e.calories,0);
+    let eaten = foodLog.reduce((s,e)=>s+e.calories,0);
+    let streak = completedDays.length;
+    let currentW = userProfile.currentWeight;
+    let goalW = userProfile.goalWeight;
+    let leftToGoal = (currentW - goalW).toFixed(1);
+    document.getElementById('dashCurrentWeight') && (document.getElementById('dashCurrentWeight').innerText = currentW.toFixed(1)+" kg");
+    document.getElementById('dashGoalWeight') && (document.getElementById('dashGoalWeight').innerText = goalW);
+    document.getElementById('weightLeft') && (document.getElementById('weightLeft').innerText = leftToGoal > 0 ? leftToGoal : "0");
+    document.getElementById('totalBurnCalsDash') && (document.getElementById('totalBurnCalsDash').innerText = burned);
+    document.getElementById('streakDaysDash') && (document.getElementById('streakDaysDash').innerText = streak);
+    let dailyPercent = Math.min(100, Math.floor((completedEx/15)*40 + (waterGlasses/8)*30 + (streak/30)*30));
+    document.getElementById('dailyProgressFillDash') && (document.getElementById('dailyProgressFillDash').style.width = dailyPercent+"%");
+    document.getElementById('dailyPercentTextDash') && (document.getElementById('dailyPercentTextDash').innerText = dailyPercent+"% daily progress");
+  }
+
+  // 30-Day Challenge: only one day increment per real calendar day
+  function renderChallengeGrid() {
+    const container = document.getElementById('challengeDaysGrid');
+    if(!container) return;
+    let today = new Date().toDateString();
+    let canCompleteToday = (lastCompletionDate !== today);
+    let nextAvailableDay = completedDays.length + 1;
+    if(nextAvailableDay > 30) nextAvailableDay = 30;
+    let html = '';
+    for(let i=1; i<=30; i++) {
+      let isCompleted = completedDays.includes(i);
+      let isNext = (i === nextAvailableDay && !isCompleted);
+      let locked = (!isCompleted && i !== nextAvailableDay);
+      let classes = 'day-badge';
+      if(isCompleted) classes += ' day-completed';
+      if(locked) classes += ' day-locked';
+      if(isNext && canCompleteToday && !isCompleted) classes += ' day-current';
+      html += `<div class="${classes}" data-day="${i}">${i}</div>`;
+    }
+    container.innerHTML = html;
+    let percent = (completedDays.length / 30) * 100;
+    document.getElementById('challengeFill').style.width = percent+"%";
+    let msg = canCompleteToday ? `✨ You can complete Day ${nextAvailableDay} today!` : `✅ You already marked today's progress. Come back tomorrow for Day ${nextAvailableDay}.`;
+    document.getElementById('nextDayMsg').innerHTML = msg;
+  }
+
+  function completeTodayChallenge() {
+    let today = new Date().toDateString();
+    if(lastCompletionDate === today) { showToast("⚠️ You already completed a day today! Come back tomorrow."); return; }
+    let nextDay = completedDays.length + 1;
+    if(nextDay > 30) { showToast("🏆 You've completed all 30 days! Amazing!"); return; }
+    completedDays.push(nextDay);
+    localStorage.setItem("completedDays", JSON.stringify(completedDays));
+    localStorage.setItem("lastCompletionDate", today);
+    // Simulate weight loss progress (optional)
+    if(userProfile.currentWeight > userProfile.goalWeight) {
+      userProfile.currentWeight = Math.max(userProfile.goalWeight, userProfile.currentWeight - 0.2);
+      localStorage.setItem("userProfile", JSON.stringify(userProfile));
+      weightHistory.push(userProfile.currentWeight);
+      if(weightHistory.length > 7) weightHistory.shift();
+      localStorage.setItem("weightHistory", JSON.stringify(weightHistory));
+    }
+    renderChallengeGrid();
+    updateDashboardNumbers();
+    updateAllCharts();
+    showToast(`🎉 Day ${nextDay} completed! Keep the momentum!`);
+  }
+
+  // Workout render
+  function renderWorkoutPage() {
+    const container = document.getElementById('workoutExerciseList');
+    if(!container) return;
+    let completedCount = workoutProgress.filter(ex => ex.done).length;
+    let html = '';
+    workoutProgress.forEach((ex, idx) => { html += `<div class="exercise-item"><div class="exercise-name ${ex.done ? 'completed-exercise' : ''}">${ex.name}</div><div class="exercise-cals"><i class="fas fa-fire"></i> ~${ex.calories} kcal</div><label><input type="checkbox" class="workout-checkbox" data-idx="${idx}" ${ex.done ? 'checked' : ''}> Done</label></div>`; });
+    container.innerHTML = html;
+    document.getElementById('workoutProgressFill').style.width = `${(completedCount/15)*100}%`;
+    document.getElementById('workoutCompletedCount').innerText = `${completedCount}/15 exercises completed`;
+    let totalBurn = workoutProgress.filter(e=>e.done).reduce((s,e)=>s+e.calories,0);
+    if(document.getElementById('totalBurnCalsDash')) document.getElementById('totalBurnCalsDash').innerText = totalBurn;
+    document.querySelectorAll('.workout-checkbox').forEach(cb => cb.addEventListener('change', (e) => { let idx = parseInt(cb.dataset.idx); workoutProgress[idx].done = cb.checked; localStorage.setItem("workoutProgress", JSON.stringify(workoutProgress)); renderWorkoutPage(); updateDashboardNumbers(); if(cb.checked) showToast(`✅ ${workoutProgress[idx].name} logged!`); }));
+  }
+  document.getElementById('resetWorkoutsBtn')?.addEventListener('click', () => { workoutProgress.forEach(ex => ex.done = false); localStorage.setItem("workoutProgress", JSON.stringify(workoutProgress)); renderWorkoutPage(); updateDashboardNumbers(); showToast("Workouts reset"); });
+
+  // Nutrition AI (same intelligent mock)
+  const foodDB = { "chicken":{cals:250,pro:30,car:0,fat:12}, "rice":{cals:130,pro:2,car:28,fat:0.5}, "salad":{cals:80,pro:3,car:8,fat:4}, "egg":{cals:70,pro:6,car:1,fat:5}, "avocado":{cals:160,pro:2,car:8,fat:15}, "oatmeal":{cals:150,pro:5,car:27,fat:3}, "banana":{cals:105,pro:1,car:27,fat:0.3}, "pasta":{cals:200,pro:7,car:42,fat:1.5}, "fish":{cals:180,pro:22,car:0,fat:8}, "broccoli":{cals:34,pro:2.8,car:7,fat:0.4} };
+  function estimateMeal(desc) { let d=desc.toLowerCase(); let totalCals=0,totalPro=0,totalCar=0,totalFat=0,match=0; for(let [k,v] of Object.entries(foodDB)) if(d.includes(k)) { totalCals+=v.cals; totalPro+=v.pro; totalCar+=v.car; totalFat+=v.fat; match++; } if(match===0) { let words=d.split(' ').length; let guessed=Math.min(600,Math.max(120,words*45)); return {calories:guessed,protein:Math.floor(guessed*0.12),carbs:Math.floor(guessed*0.4),fats:Math.floor(guessed*0.18)}; } return {calories:Math.round(totalCals),protein:Math.round(totalPro),carbs:Math.round(totalCar),fats:Math.round(totalFat)}; }
+  function addFoodEntry(desc,nut) { foodLog.push({description:desc,calories:nut.calories,protein:nut.protein,carbs:nut.carbs,fats:nut.fats,time:new Date().toLocaleTimeString()}); localStorage.setItem("foodLog",JSON.stringify(foodLog)); renderNutritionPage(); updateDashboardNumbers(); showToast(`➕ Added: ${desc} (${nut.calories} kcal)`); }
+  function renderNutritionPage() { let logDiv=document.getElementById('foodLogList'); if(!logDiv) return; let totalCals=0,totalPro=0,totalCar=0,totalFat=0; let logsHtml=''; foodLog.forEach((item,idx)=>{ logsHtml+=`<div class="food-item"><span><strong>${item.description}</strong><br><small>${item.time}</small></span><span>🔥 ${item.calories} kcal | P:${item.protein}g C:${item.carbs}g F:${item.fats}g</span><button class="remove-food" data-idx="${idx}" style="background:none;border:none;color:#ef4444;"><i class="fas fa-trash"></i></button></div>`; totalCals+=item.calories; totalPro+=item.protein; totalCar+=item.carbs; totalFat+=item.fats; }); logDiv.innerHTML=logsHtml||'<p>No meals logged yet.</p>'; document.getElementById('totalCaloriesSpan').innerText=totalCals; document.getElementById('totalProteinSpan').innerText=totalPro; document.getElementById('totalCarbsSpan').innerText=totalCar; document.getElementById('totalFatsSpan').innerText=totalFat; document.querySelectorAll('.remove-food').forEach(btn=>btn.addEventListener('click',(e)=>{ let i=parseInt(btn.dataset.idx); foodLog.splice(i,1); localStorage.setItem("foodLog",JSON.stringify(foodLog)); renderNutritionPage(); updateDashboardNumbers(); showToast("Removed"); })); }
+  function renderWaterTracker() { let cont=document.getElementById('waterGlassesContainer'); if(!cont) return; let html=`<div><strong>${waterGlasses}/8 glasses</strong><div class="progress"><div class="progress-fill" style="width:${(waterGlasses/8)*100}%"></div></div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;">`; for(let i=1;i<=8;i++) html+=`<button class="${i<=waterGlasses?'btn-primary':'btn-outline'}" data-glass="${i}" style="border-radius:60px;">💧 ${i}</button>`; html+=`</div></div>`; cont.innerHTML=html; document.querySelectorAll('[data-glass]').forEach(btn=>btn.addEventListener('click',(e)=>{ waterGlasses=parseInt(btn.dataset.glass); localStorage.setItem("waterGlasses",waterGlasses); renderWaterTracker(); updateDashboardNumbers(); showToast(`Water: ${waterGlasses}/8`); })); }
+  document.getElementById('resetWaterBtn')?.addEventListener('click',()=>{ waterGlasses=0; localStorage.setItem("waterGlasses",0); renderWaterTracker(); updateDashboardNumbers(); });
+  document.getElementById('analyzeMealBtn')?.addEventListener('click',()=>{ let desc=document.getElementById('mealDescription').value.trim(); if(!desc){showToast("Describe your meal");return;} let est=estimateMeal(desc); document.getElementById('aiSuggestion').innerHTML=`<i class="fas fa-microchip"></i> AI: "${desc}" → ${est.calories} kcal, ${est.protein}g P, ${est.carbs}g C, ${est.fats}g F. <button id="confirmAddBtn" class="btn-primary">Add</button>`; document.getElementById('confirmAddBtn')?.addEventListener('click',()=>{ addFoodEntry(desc,est); document.getElementById('mealDescription').value=''; document.getElementById('aiSuggestion').innerHTML=''; }); });
+  document.getElementById('clearMealsBtn')?.addEventListener('click',()=>{ foodLog=[]; localStorage.setItem("foodLog",JSON.stringify(foodLog)); renderNutritionPage(); updateDashboardNumbers(); showToast("Food log cleared"); });
+  function saveProfile(weight,goal){ userProfile.currentWeight=parseFloat(weight); userProfile.goalWeight=parseFloat(goal); localStorage.setItem("userProfile",JSON.stringify(userProfile)); weightHistory=[userProfile.currentWeight, userProfile.currentWeight-0.2, userProfile.currentWeight-0.5, userProfile.currentWeight-0.8, userProfile.currentWeight-1.1, userProfile.currentWeight-1.4, userProfile.currentWeight-1.7]; localStorage.setItem("weightHistory",JSON.stringify(weightHistory)); updateAllCharts(); updateDashboardNumbers(); showToast("Profile updated! Let's crush your goals."); }
+  function switchPage(pageId) { document.getElementById('landingPage').style.display=pageId==='landing'?'block':'none'; document.getElementById('dashboardPage').style.display=pageId==='dashboard'?'block':'none'; document.getElementById('challengePage').style.display=pageId==='challenge'?'block':'none'; document.getElementById('workoutPage').style.display=pageId==='workout'?'block':'none'; document.getElementById('nutritionPage').style.display=pageId==='nutrition'?'block':'none'; document.getElementById('waterPage').style.display=pageId==='water'?'block':'none'; if(pageId==='dashboard'){ updateAllCharts(); updateDashboardNumbers(); } if(pageId==='challenge') renderChallengeGrid(); if(pageId==='workout') renderWorkoutPage(); if(pageId==='nutrition') renderNutritionPage(); if(pageId==='water') renderWaterTracker(); }
+  document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>switchPage(el.dataset.page)));
+  document.getElementById('startChallengeBtn')?.addEventListener('click',()=>switchPage('challenge'));
+  document.getElementById('trackProgressBtn')?.addEventListener('click',()=>switchPage('dashboard'));
+  document.getElementById('darkModeToggle')?.addEventListener('click',()=>document.body.classList.toggle('dark'));
+  const profileModal=document.getElementById('profileModal'); document.getElementById('showProfileBtn')?.addEventListener('click',()=>{ document.getElementById('userWeight').value=userProfile.currentWeight; document.getElementById('userGoalWeight').value=userProfile.goalWeight; profileModal.style.display='flex'; });
+  document.getElementById('closeProfileBtn')?.addEventListener('click',()=>profileModal.style.display='none');
+  document.getElementById('saveProfileBtn')?.addEventListener('click',()=>{ let w=document.getElementById('userWeight').value; let g=document.getElementById('userGoalWeight').value; if(w&&g) saveProfile(w,g); profileModal.style.display='none'; });
+  document.getElementById('completeTodayBtn')?.addEventListener('click',completeTodayChallenge);
+  renderWorkoutPage(); renderWaterTracker(); renderNutritionPage(); renderChallengeGrid(); updateAllCharts(); updateDashboardNumbers(); switchPage('landing');
+</script>
+</body>
+</html>
